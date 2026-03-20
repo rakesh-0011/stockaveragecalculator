@@ -1,695 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>STOCK-CALC</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <title>STOCK-CALC Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- SIDEBAR -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
       <span class="logo-icon"><i class="fas fa-chart-line"></i></span>
-      <span class="logo-text">STOCK-CALC</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="themeToggle" checked/>
-        <span class="slider"></span>
-      </label>
+      <span class="logo-text">STOCK<span class="accent">CALC</span></span>
     </div>
-    <nav class="sidebar-nav">
-      <ul>
-        <li class="active" onclick="showCalculator('stockAvg')"><i class="fas fa-calculator"></i> Stock Average Calculator</li>
-        <li onclick="showCalculator('profitLoss')"><i class="fas fa-chart-bar"></i> Stock Profit/Loss Calculator</li>
-        <li onclick="showCalculator('sip')"><i class="fas fa-piggy-bank"></i> SIP Calculator</li>
-        <li onclick="showCalculator('percentage')"><i class="fas fa-percent"></i> Percentage Calculator</li>
-        <li onclick="showCalculator('emi')"><i class="fas fa-money-bill-wave"></i> EMI Calculator</li>
-        <li onclick="showCalculator('cagr')"><i class="fas fa-chart-area"></i> CAGR calculator</li>
-        <li onclick="showCalculator('swp')"><i class="fas fa-user-minus"></i> SWP Calculator</li>
-        <li onclick="showCalculator('stockSplit')"><i class="fas fa-cut"></i> Stock Split Calculator</li>
-        <li onclick="showCalculator('bonusShare')"><i class="fas fa-gift"></i> Bonus Share Calculator <span class="badge-new">New</span></li>
-        <li onclick="showCalculator('lumpsum')"><i class="fas fa-coins"></i> Lumpsum Calculator <span class="badge-new">New</span></li>
-        <li onclick="showCalculator('rule72')"><i class="fas fa-clock"></i> Rule of 72 Calculator</li>
-        <li onclick="showCalculator('dividend')"><i class="fas fa-hand-holding-usd"></i> Dividend Details <span class="badge-new">New</span></li>
-        <li onclick="showCalculator('bonusBuyback')"><i class="fas fa-search-dollar"></i> Bonus &amp; Buyback Details</li>
-        <li onclick="showCalculator('faceValue')"><i class="fas fa-exchange-alt"></i> Face value split &amp; Demerger</li>
-        <li onclick="showCalculator('stockScore')"><i class="fas fa-robot"></i> Stock Score By AI</li>
-        <li onclick="showCalculator('holidays')"><i class="fas fa-calendar-alt"></i> Trading Holidays</li>
-        <li onclick="showCalculator('books')"><i class="fas fa-book"></i> Best books on investment trading stock</li>
-      </ul>
-    </nav>
+    <label class="toggle-switch" title="Toggle theme">
+      <input type="checkbox" id="themeToggle" checked/>
+      <span class="slider"><span class="slider-icon sun"><i class="fas fa-sun"></i></span><span class="slider-icon moon"><i class="fas fa-moon"></i></span></span>
+    </label>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
-    <div class="topbar">
+  <!-- Search -->
+  <div class="search-wrap">
+    <i class="fas fa-search search-icon"></i>
+    <input type="text" id="sidebarSearch" placeholder="Search calculator..." oninput="filterNav(this.value)"/>
+  </div>
+
+  <!-- Favorites -->
+  <div class="nav-group" id="favGroup" style="display:none">
+    <div class="nav-group-title"><i class="fas fa-star"></i> Favourites</div>
+    <ul id="favList"></ul>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-title"><i class="fas fa-calculator"></i> Calculators</div>
+    <ul id="mainNav">
+      <li data-id="stockAvg" class="active" onclick="showCalc('stockAvg',this)"><span class="nav-icon"><i class="fas fa-calculator"></i></span><span class="nav-label">Stock Average</span><span class="fav-btn" title="Favourite" onclick="toggleFav('stockAvg',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="profitLoss" onclick="showCalc('profitLoss',this)"><span class="nav-icon"><i class="fas fa-chart-bar"></i></span><span class="nav-label">Profit / Loss</span><span class="fav-btn" onclick="toggleFav('profitLoss',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="sip" onclick="showCalc('sip',this)"><span class="nav-icon"><i class="fas fa-piggy-bank"></i></span><span class="nav-label">SIP Calculator</span><span class="fav-btn" onclick="toggleFav('sip',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="percentage" onclick="showCalc('percentage',this)"><span class="nav-icon"><i class="fas fa-percent"></i></span><span class="nav-label">Percentage</span><span class="fav-btn" onclick="toggleFav('percentage',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="emi" onclick="showCalc('emi',this)"><span class="nav-icon"><i class="fas fa-money-bill-wave"></i></span><span class="nav-label">EMI Calculator</span><span class="fav-btn" onclick="toggleFav('emi',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="cagr" onclick="showCalc('cagr',this)"><span class="nav-icon"><i class="fas fa-chart-area"></i></span><span class="nav-label">CAGR Calculator</span><span class="fav-btn" onclick="toggleFav('cagr',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="swp" onclick="showCalc('swp',this)"><span class="nav-icon"><i class="fas fa-user-minus"></i></span><span class="nav-label">SWP Calculator</span><span class="fav-btn" onclick="toggleFav('swp',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="stockSplit" onclick="showCalc('stockSplit',this)"><span class="nav-icon"><i class="fas fa-cut"></i></span><span class="nav-label">Stock Split</span><span class="fav-btn" onclick="toggleFav('stockSplit',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="bonusShare" onclick="showCalc('bonusShare',this)"><span class="nav-icon"><i class="fas fa-gift"></i></span><span class="nav-label">Bonus Share <span class="badge">New</span></span><span class="fav-btn" onclick="toggleFav('bonusShare',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="lumpsum" onclick="showCalc('lumpsum',this)"><span class="nav-icon"><i class="fas fa-coins"></i></span><span class="nav-label">Lumpsum <span class="badge">New</span></span><span class="fav-btn" onclick="toggleFav('lumpsum',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="rule72" onclick="showCalc('rule72',this)"><span class="nav-icon"><i class="fas fa-clock"></i></span><span class="nav-label">Rule of 72</span><span class="fav-btn" onclick="toggleFav('rule72',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="dividend" onclick="showCalc('dividend',this)"><span class="nav-icon"><i class="fas fa-hand-holding-usd"></i></span><span class="nav-label">Dividend Details <span class="badge">New</span></span><span class="fav-btn" onclick="toggleFav('dividend',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="bonusBuyback" onclick="showCalc('bonusBuyback',this)"><span class="nav-icon"><i class="fas fa-search-dollar"></i></span><span class="nav-label">Bonus &amp; Buyback</span><span class="fav-btn" onclick="toggleFav('bonusBuyback',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="faceValue" onclick="showCalc('faceValue',this)"><span class="nav-icon"><i class="fas fa-exchange-alt"></i></span><span class="nav-label">Face Value Split</span><span class="fav-btn" onclick="toggleFav('faceValue',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="stockScore" onclick="showCalc('stockScore',this)"><span class="nav-icon"><i class="fas fa-robot"></i></span><span class="nav-label">Stock Score AI</span><span class="fav-btn" onclick="toggleFav('stockScore',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="holidays" onclick="showCalc('holidays',this)"><span class="nav-icon"><i class="fas fa-calendar-alt"></i></span><span class="nav-label">Trading Holidays</span><span class="fav-btn" onclick="toggleFav('holidays',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="books" onclick="showCalc('books',this)"><span class="nav-icon"><i class="fas fa-book"></i></span><span class="nav-label">Best Books</span><span class="fav-btn" onclick="toggleFav('books',event)"><i class="far fa-star"></i></span></li>
+      <li data-id="history" onclick="showCalc('history',this)"><span class="nav-icon"><i class="fas fa-history"></i></span><span class="nav-label">Calc History</span><span class="fav-btn" onclick="toggleFav('history',event)"><i class="far fa-star"></i></span></li>
+    </ul>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <header class="topbar">
+    <div class="topbar-left">
+      <span id="currentCalcName" class="current-name">Stock Average Calculator</span>
+    </div>
+    <div class="topbar-right">
+      <div class="market-ticker">
+        <span class="ticker-item up"><i class="fas fa-caret-up"></i> NIFTY 22,450.30</span>
+        <span class="ticker-item up"><i class="fas fa-caret-up"></i> SENSEX 73,920.15</span>
+        <span class="ticker-item down"><i class="fas fa-caret-down"></i> BANK NIFTY 48,120.60</span>
+      </div>
       <div id="clock" class="clock"></div>
     </div>
+  </header>
 
-    <!-- RIGHT AD PANEL -->
-    <div class="right-panel">
-      <div class="ad-section">
-        <ul>
-          <li><a href="#">Back support belts for posture correction ⭐⭐⭐</a></li>
-          <li><a href="#">Ear buds new model 2026</a></li>
-          <li><a href="#">Best protein powder for muscle gain</a></li>
-        </ul>
-        <div class="books-rec">
-          <h4>Books Recommendation</h4>
-          <ul>
-            <li><a href="#">Top Picks: Essential Stock Market Books for Every Investor</a></li>
-          </ul>
-        </div>
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ========== CALCULATORS ========== -->
+
+  <!-- 1. Stock Average -->
+  <section id="calc-stockAvg" class="calc-section active">
+    <div class="calc-header">
+      <div>
+        <h2><i class="fas fa-calculator"></i> Stock Average Calculator</h2>
+        <p class="calc-subtitle">Calculate your average buy price across multiple purchases</p>
+      </div>
+      <div class="calc-actions">
+        <button class="btn-icon" title="Export PDF" onclick="exportPDF('stockAvg')"><i class="fas fa-file-pdf"></i> Export PDF</button>
       </div>
     </div>
-
-    <!-- ===== CALCULATORS ===== -->
-
-    <!-- 1. Stock Average Calculator -->
-    <div id="calc-stockAvg" class="calculator-section active">
-      <h2>Stock Average Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <div id="stockAvgRows">
-            <div class="row-group">
-              <label>Buy 1 Price:</label>
-              <input type="number" class="buy-price" placeholder="Enter buy price"/>
-              <label>Quantity:</label>
-              <input type="number" class="buy-qty" placeholder="Enter quantity"/>
-            </div>
-            <div class="row-group">
-              <label>Buy 2 Price:</label>
-              <input type="number" class="buy-price" placeholder="Enter buy price"/>
-              <label>Quantity:</label>
-              <input type="number" class="buy-qty" placeholder="Enter quantity"/>
-            </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div id="stockAvgRows">
+          <div class="input-row">
+            <div class="input-group"><label>Buy 1 Price (₹)</label><input type="number" class="buy-price" placeholder="0.00"/></div>
+            <div class="input-group"><label>Quantity</label><input type="number" class="buy-qty" placeholder="0"/></div>
           </div>
-          <div class="btn-group">
-            <button class="btn-orange" onclick="addStockRow()">Add More</button>
-            <button class="btn-clear" onclick="clearFields('stockAvg')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcStockAvg()">Calculate</button>
-          </div>
-          <div class="result-box" id="stockAvgResult">Average Price: 0</div>
-        </div>
-      </div>
-      <div class="description-box">
-        <p>The Stock Average Calculator helps you determine the average purchase price of a stock when you have bought it multiple times at different prices. This is commonly used for averaging down or up on a stock position.</p>
-        <p><strong>Formula:</strong> Average Price = Total Investment / Total Quantity</p>
-      </div>
-    </div>
-
-    <!-- 2. Stock Profit/Loss Calculator -->
-    <div id="calc-profitLoss" class="calculator-section">
-      <h2>Stock Profit/Loss Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Buy Price:</label>
-          <input type="number" id="plBuyPrice" placeholder="Enter buy price"/>
-          <label>Sell Price:</label>
-          <input type="number" id="plSellPrice" placeholder="Enter sell price"/>
-          <label>Quantity:</label>
-          <input type="number" id="plQty" placeholder="Enter quantity"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('profitLoss')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcProfitLoss()">Calculate</button>
-          </div>
-          <div class="result-box" id="plResult">Profit/Loss: 0</div>
-        </div>
-      </div>
-      <div class="description-box">
-        <p>Calculate your profit or loss from stock trading. Enter the buy price, sell price, and quantity to see your total gain or loss.</p>
-        <p><strong>Formula:</strong> Profit/Loss = (Sell Price - Buy Price) × Quantity</p>
-      </div>
-    </div>
-
-    <!-- 3. SIP Calculator -->
-    <div id="calc-sip" class="calculator-section">
-      <h2>SIP Calculator (Systematic Investment Plan)</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Monthly Investment (₹):</label>
-          <input type="number" id="sipAmount" placeholder="Enter monthly amount"/>
-          <label>Expected Annual Return (%):</label>
-          <input type="number" id="sipRate" placeholder="Enter annual return rate"/>
-          <label>Investment Period (Years):</label>
-          <input type="number" id="sipYears" placeholder="Enter years"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('sip')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcSIP()">Calculate</button>
-          </div>
-          <div class="result-box" id="sipResult">Maturity Amount: ₹0</div>
-        </div>
-      </div>
-      <div class="description-box">
-        <p>SIP (Systematic Investment Plan) allows you to invest a fixed amount every month in mutual funds. This calculator shows you the maturity amount based on your monthly investment, expected returns, and time period.</p>
-        <p><strong>Formula:</strong> M = P × ({[1 + i]^n – 1} / i) × (1 + i)</p>
-      </div>
-    </div>
-
-    <!-- 4. Percentage Calculator -->
-    <div id="calc-percentage" class="calculator-section">
-      <h2>Percentage Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Value:</label>
-          <input type="number" id="percValue" placeholder="Enter value"/>
-          <label>Percentage (%):</label>
-          <input type="number" id="percPercent" placeholder="Enter percentage"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('percentage')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcPercentage()">Calculate</button>
-          </div>
-          <div class="result-box" id="percResult">Result: 0</div>
-        </div>
-      </div>
-      <div class="description-box">
-        <p>Calculate percentage of any value. Useful for calculating brokerage charges, tax on profit, etc.</p>
-      </div>
-    </div>
-
-    <!-- 5. EMI Calculator -->
-    <div id="calc-emi" class="calculator-section">
-      <h2>EMI Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Loan Amount (₹):</label>
-          <input type="number" id="emiLoan" placeholder="Enter loan amount"/>
-          <label>Annual Interest Rate (%):</label>
-          <input type="number" id="emiRate" placeholder="Enter interest rate"/>
-          <label>Loan Tenure (Months):</label>
-          <input type="number" id="emiMonths" placeholder="Enter months"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('emi')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcEMI()">Calculate</button>
-          </div>
-          <div class="result-box" id="emiResult">Monthly EMI: ₹0</div>
-        </div>
-      </div>
-      <div class="description-box">
-        <p>EMI (Equated Monthly Installment) Calculator helps you find out the monthly payment you need to make for a loan.</p>
-        <p><strong>Formula:</strong> EMI = P × r × (1+r)^n / ((1+r)^n - 1)</p>
-      </div>
-    </div>
-
-    <!-- 6. CAGR Calculator -->
-    <div id="calc-cagr" class="calculator-section">
-      <h2>CAGR calculator(Compound Annual Growth Rate Calculator)</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Initial Value</label>
-          <input type="number" id="cagrInitial" placeholder="Enter initial value"/>
-          <label>Final Value:</label>
-          <input type="number" id="cagrFinal" placeholder="Enter final value"/>
-          <label>Years:</label>
-          <input type="number" id="cagrYears" placeholder="Enter years"/>
-          <div class="result-box" id="cagrResult">CAGR : 0</div>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('cagr')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcCAGR()">Calculate</button>
+          <div class="input-row">
+            <div class="input-group"><label>Buy 2 Price (₹)</label><input type="number" class="buy-price" placeholder="0.00"/></div>
+            <div class="input-group"><label>Quantity</label><input type="number" class="buy-qty" placeholder="0"/></div>
           </div>
         </div>
-      </div>
-      <div class="description-box">
-        <p>The Compound Annual Growth Rate (CAGR) calculator is a tool used to determine the average annual growth rate of an investment over a specified period. It is particularly useful for assessing the performance of long-term investments such as stocks, mutual funds, and retirement accounts.</p>
-        <p>The formula for calculating CAGR is:</p>
-        <code>CAGR = (Final Value / Initial Value)^(1 / Number of Years) - 1</code>
-        <p><strong>Where:</strong></p>
-        <ul>
-          <li><strong>Final Value:</strong> The ending balance or value of the investment.</li>
-          <li><strong>Initial Value:</strong> The starting balance or value of the investment.</li>
-          <li><strong>Number of Years:</strong> The total number of years over which the investment has grown.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 7. SWP Calculator -->
-    <div id="calc-swp" class="calculator-section">
-      <h2>SWP Calculator (Systematic Withdrawal Plan)</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Total Investment (₹):</label>
-          <input type="number" id="swpInvestment" placeholder="Enter total investment"/>
-          <label>Monthly Withdrawal (₹):</label>
-          <input type="number" id="swpWithdrawal" placeholder="Enter monthly withdrawal"/>
-          <label>Expected Annual Return (%):</label>
-          <input type="number" id="swpRate" placeholder="Enter return rate"/>
-          <label>Period (Years):</label>
-          <input type="number" id="swpYears" placeholder="Enter years"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('swp')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcSWP()">Calculate</button>
-          </div>
-          <div class="result-box" id="swpResult">Final Value: ₹0</div>
+        <button class="btn-add" onclick="addStockRow()"><i class="fas fa-plus"></i> Add More Purchases</button>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('stockAvg')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcStockAvg()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>SWP allows you to withdraw a fixed amount from your mutual fund investment every month. This calculator shows the remaining corpus after regular withdrawals.</p>
+      <div class="result-card" id="res-stockAvg">
+        <div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div>
       </div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>When you buy the same stock multiple times at different prices, this calculator finds your average cost per share — helping you understand your breakeven point.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>Average Price = Total Investment ÷ Total Quantity</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Buying more shares when price drops (averaging down) lowers your average cost and reduces the price needed to break even.</div>
+    </div>
+  </section>
 
-    <!-- 8. Stock Split Calculator -->
-    <div id="calc-stockSplit" class="calculator-section">
-      <h2>Stock Split Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Current Price (₹):</label>
-          <input type="number" id="splitPrice" placeholder="Enter current price"/>
-          <label>Number of Shares:</label>
-          <input type="number" id="splitShares" placeholder="Enter number of shares"/>
-          <label>Split Ratio (e.g. 2 for 2:1):</label>
-          <input type="number" id="splitRatio" placeholder="Enter split ratio"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('stockSplit')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcStockSplit()">Calculate</button>
-          </div>
-          <div class="result-box" id="splitResult">New Price: ₹0 | New Shares: 0</div>
+  <!-- 2. Profit/Loss -->
+  <section id="calc-profitLoss" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-chart-bar"></i> Stock Profit / Loss Calculator</h2><p class="calc-subtitle">Know your exact gains or losses from any trade</p></div>
+      <button class="btn-icon" onclick="exportPDF('profitLoss')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Buy Price (₹)</label><input type="number" id="plBuy" placeholder="0.00"/></div>
+        <div class="input-group"><label>Sell Price (₹)</label><input type="number" id="plSell" placeholder="0.00"/></div>
+        <div class="input-group"><label>Quantity</label><input type="number" id="plQty" placeholder="0"/></div>
+        <div class="input-group"><label>Brokerage % (optional)</label><input type="number" id="plBrokerage" placeholder="0.1"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('profitLoss')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcPL()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>A stock split increases the number of shares while reducing the price proportionally. The total value of your investment remains the same.</p>
-      </div>
+      <div class="result-card" id="res-profitLoss"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>Enter your buy price, sell price and quantity to instantly see profit or loss including brokerage charges.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>P&L = (Sell Price - Buy Price) × Quantity - Brokerage</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Always factor in brokerage, STT and other charges — they can significantly impact small trades.</div>
+    </div>
+  </section>
 
-    <!-- 9. Bonus Share Calculator -->
-    <div id="calc-bonusShare" class="calculator-section">
-      <h2>Bonus Share Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Number of Shares Held:</label>
-          <input type="number" id="bonusShares" placeholder="Enter shares held"/>
-          <label>Bonus Ratio (e.g. 1 for 1:1):</label>
-          <input type="number" id="bonusRatio" placeholder="Enter bonus ratio"/>
-          <label>Current Price (₹):</label>
-          <input type="number" id="bonusPrice" placeholder="Enter current price"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('bonusShare')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcBonusShare()">Calculate</button>
-          </div>
-          <div class="result-box" id="bonusResult">Bonus Shares: 0 | Total Shares: 0</div>
+  <!-- 3. SIP -->
+  <section id="calc-sip" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-piggy-bank"></i> SIP Calculator</h2><p class="calc-subtitle">Systematic Investment Plan — grow wealth monthly</p></div>
+      <button class="btn-icon" onclick="exportPDF('sip')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Monthly Investment (₹)</label><input type="number" id="sipAmt" placeholder="5000"/></div>
+        <div class="input-group"><label>Expected Annual Return (%)</label><input type="number" id="sipRate" placeholder="12"/></div>
+        <div class="input-group"><label>Investment Period (Years)</label><input type="number" id="sipYrs" placeholder="10"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('sip')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcSIP()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>Bonus shares are additional shares given to existing shareholders free of cost. Calculate how many bonus shares you will receive based on the bonus ratio.</p>
-      </div>
+      <div class="result-card" id="res-sip"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>SIP lets you invest small amounts every month into mutual funds, leveraging the power of compounding over time.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>M = P × {[(1+r)^n – 1] / r} × (1+r)</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Starting early is the biggest advantage — even ₹1,000/month at 12% for 30 years becomes ₹35 Lakhs!</div>
+    </div>
+  </section>
 
-    <!-- 10. Lumpsum Calculator -->
-    <div id="calc-lumpsum" class="calculator-section">
-      <h2>Lumpsum Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Investment Amount (₹):</label>
-          <input type="number" id="lsAmount" placeholder="Enter investment amount"/>
-          <label>Expected Annual Return (%):</label>
-          <input type="number" id="lsRate" placeholder="Enter annual return rate"/>
-          <label>Investment Period (Years):</label>
-          <input type="number" id="lsYears" placeholder="Enter years"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('lumpsum')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcLumpsum()">Calculate</button>
-          </div>
-          <div class="result-box" id="lsResult">Maturity Amount: ₹0</div>
+  <!-- 4. Percentage -->
+  <section id="calc-percentage" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-percent"></i> Percentage Calculator</h2><p class="calc-subtitle">Quick percentage calculations for any value</p></div>
+      <button class="btn-icon" onclick="exportPDF('percentage')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Value</label><input type="number" id="percVal" placeholder="0"/></div>
+        <div class="input-group"><label>Percentage (%)</label><input type="number" id="percPct" placeholder="0"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('percentage')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcPerc()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>Lumpsum investment means investing a large amount at one time. This calculator shows the maturity value of a one-time investment.</p>
-        <p><strong>Formula:</strong> A = P × (1 + r)^n</p>
-      </div>
+      <div class="result-card" id="res-percentage"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> Use Cases</h4>
+      <p>Useful for calculating brokerage charges, tax on gains, discount on stocks, or any percentage-based calculation.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>Result = (Value × Percentage) ÷ 100</code></div>
+    </div>
+  </section>
 
-    <!-- 11. Rule of 72 -->
-    <div id="calc-rule72" class="calculator-section">
-      <h2>Rule of 72 Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Annual Interest Rate (%):</label>
-          <input type="number" id="rule72Rate" placeholder="Enter interest rate"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('rule72')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcRule72()">Calculate</button>
-          </div>
-          <div class="result-box" id="rule72Result">Years to Double: 0</div>
+  <!-- 5. EMI -->
+  <section id="calc-emi" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-money-bill-wave"></i> EMI Calculator</h2><p class="calc-subtitle">Calculate monthly loan installments instantly</p></div>
+      <button class="btn-icon" onclick="exportPDF('emi')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Loan Amount (₹)</label><input type="number" id="emiLoan" placeholder="500000"/></div>
+        <div class="input-group"><label>Annual Interest Rate (%)</label><input type="number" id="emiRate" placeholder="8.5"/></div>
+        <div class="input-group"><label>Loan Tenure (Months)</label><input type="number" id="emiMonths" placeholder="60"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('emi')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcEMI()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>The Rule of 72 is a simple way to determine how long an investment will take to double given a fixed annual interest rate.</p>
-        <p><strong>Formula:</strong> Years to Double = 72 / Annual Interest Rate</p>
-      </div>
+      <div class="result-card" id="res-emi"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>EMI (Equated Monthly Installment) is a fixed payment you make every month to repay a loan over a set period.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>EMI = P × r × (1+r)^n ÷ [(1+r)^n - 1]</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Even a 0.5% lower interest rate on a ₹50L loan can save you ₹1.5L+ over 20 years.</div>
+    </div>
+  </section>
 
-    <!-- 12. Dividend Details -->
-    <div id="calc-dividend" class="calculator-section">
-      <h2>Dividend Details Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Number of Shares:</label>
-          <input type="number" id="divShares" placeholder="Enter number of shares"/>
-          <label>Dividend Per Share (₹):</label>
-          <input type="number" id="divAmount" placeholder="Enter dividend per share"/>
-          <label>Buy Price Per Share (₹):</label>
-          <input type="number" id="divBuyPrice" placeholder="Enter buy price"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('dividend')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcDividend()">Calculate</button>
-          </div>
-          <div class="result-box" id="divResult">Total Dividend: ₹0 | Yield: 0%</div>
+  <!-- 6. CAGR -->
+  <section id="calc-cagr" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-chart-area"></i> CAGR Calculator</h2><p class="calc-subtitle">Compound Annual Growth Rate — measure true investment growth</p></div>
+      <button class="btn-icon" onclick="exportPDF('cagr')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Initial Value (₹)</label><input type="number" id="cagrInit" placeholder="100000"/></div>
+        <div class="input-group"><label>Final Value (₹)</label><input type="number" id="cagrFinal" placeholder="200000"/></div>
+        <div class="input-group"><label>Number of Years</label><input type="number" id="cagrYrs" placeholder="5"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('cagr')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcCAGR()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>Calculate your total dividend income and dividend yield based on the number of shares held and dividend per share.</p>
-      </div>
+      <div class="result-card" id="res-cagr"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>CAGR represents the mean annual growth rate of an investment over a period longer than one year — it smooths out volatility.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>CAGR = (Final Value ÷ Initial Value)^(1÷Years) − 1</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Compare CAGR of different investments to objectively pick the better performer.</div>
+    </div>
+  </section>
 
-    <!-- 13. Bonus & Buyback Details -->
-    <div id="calc-bonusBuyback" class="calculator-section">
-      <h2>Bonus &amp; Buyback Details</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Shares Held:</label>
-          <input type="number" id="bbShares" placeholder="Enter shares held"/>
-          <label>Buyback Price (₹):</label>
-          <input type="number" id="bbPrice" placeholder="Enter buyback price"/>
-          <label>Buyback Ratio (e.g. 1 for 1:10):</label>
-          <input type="number" id="bbRatio" placeholder="Enter buyback ratio"/>
-          <label>Total Shares in Buyback:</label>
-          <input type="number" id="bbTotal" placeholder="Enter total buyback shares"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('bonusBuyback')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcBuyback()">Calculate</button>
-          </div>
-          <div class="result-box" id="bbResult">Eligible Shares: 0 | Amount: ₹0</div>
+  <!-- 7. SWP -->
+  <section id="calc-swp" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-user-minus"></i> SWP Calculator</h2><p class="calc-subtitle">Systematic Withdrawal Plan — plan your retirement income</p></div>
+      <button class="btn-icon" onclick="exportPDF('swp')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Total Investment (₹)</label><input type="number" id="swpInv" placeholder="1000000"/></div>
+        <div class="input-group"><label>Monthly Withdrawal (₹)</label><input type="number" id="swpWith" placeholder="10000"/></div>
+        <div class="input-group"><label>Expected Annual Return (%)</label><input type="number" id="swpRate" placeholder="8"/></div>
+        <div class="input-group"><label>Period (Years)</label><input type="number" id="swpYrs" placeholder="20"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('swp')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcSWP()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>A stock buyback is when a company repurchases its own shares from the market. Calculate your eligible shares and potential earnings from a buyback offer.</p>
-      </div>
+      <div class="result-card" id="res-swp"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>SWP allows retirees to withdraw a fixed amount every month while the remaining corpus continues to earn returns.</p>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Keep your withdrawal rate below the return rate to ensure your corpus never depletes.</div>
+    </div>
+  </section>
 
-    <!-- 14. Face Value Split & Demerger -->
-    <div id="calc-faceValue" class="calculator-section">
-      <h2>Face Value Split &amp; Demerger Calculator</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Current Face Value (₹):</label>
-          <input type="number" id="fvCurrent" placeholder="Enter current face value"/>
-          <label>New Face Value (₹):</label>
-          <input type="number" id="fvNew" placeholder="Enter new face value"/>
-          <label>Shares Held:</label>
-          <input type="number" id="fvShares" placeholder="Enter shares held"/>
-          <label>Current Price (₹):</label>
-          <input type="number" id="fvPrice" placeholder="Enter current price"/>
-          <div class="btn-group">
-            <button class="btn-clear" onclick="clearFields('faceValue')">Clear Fields</button>
-            <button class="btn-calc" onclick="calcFaceValue()">Calculate</button>
-          </div>
-          <div class="result-box" id="fvResult">New Shares: 0 | New Price: ₹0</div>
+  <!-- 8. Stock Split -->
+  <section id="calc-stockSplit" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-cut"></i> Stock Split Calculator</h2><p class="calc-subtitle">See how splits affect your holdings</p></div>
+      <button class="btn-icon" onclick="exportPDF('stockSplit')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Current Price (₹)</label><input type="number" id="spPrice" placeholder="1000"/></div>
+        <div class="input-group"><label>Shares Held</label><input type="number" id="spShares" placeholder="100"/></div>
+        <div class="input-group"><label>Split Ratio (e.g. 2 for 2:1)</label><input type="number" id="spRatio" placeholder="2"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('stockSplit')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcSplit()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>When a company reduces its face value, the number of shares increases proportionally and the price adjusts accordingly. Calculate the impact on your holdings.</p>
-      </div>
+      <div class="result-card" id="res-stockSplit"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>A stock split increases the number of shares while reducing the price. Your total investment value stays the same.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>New Price = Old Price ÷ Ratio | New Shares = Old Shares × Ratio</code></div>
+    </div>
+  </section>
 
-    <!-- 15. Stock Score By AI -->
-    <div id="calc-stockScore" class="calculator-section">
-      <h2>Stock Score By AI</h2>
-      <div class="calc-body">
-        <div class="calc-left">
-          <label>Stock Symbol / Company Name:</label>
-          <input type="text" id="aiStock" placeholder="e.g. RELIANCE, TCS, INFY"/>
-          <div class="btn-group">
-            <button class="btn-calc" onclick="calcStockScore()">Analyze</button>
-          </div>
-          <div class="result-box" id="aiResult">Enter a stock name to get AI score analysis.</div>
+  <!-- 9. Bonus Share -->
+  <section id="calc-bonusShare" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-gift"></i> Bonus Share Calculator</h2><p class="calc-subtitle">Calculate free shares from bonus announcements</p></div>
+      <button class="btn-icon" onclick="exportPDF('bonusShare')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Shares Held</label><input type="number" id="bsShares" placeholder="100"/></div>
+        <div class="input-group"><label>Bonus Ratio (e.g. 1 for 1:1)</label><input type="number" id="bsRatio" placeholder="1"/></div>
+        <div class="input-group"><label>Current Price (₹)</label><input type="number" id="bsPrice" placeholder="500"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('bonusShare')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcBonus()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
-      <div class="description-box">
-        <p>Get an AI-based score for any Indian stock based on fundamental and technical parameters. This is for educational purposes only and not financial advice.</p>
-      </div>
+      <div class="result-card" id="res-bonusShare"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>Companies reward shareholders with free additional shares. A 1:1 bonus means you get 1 extra share for every share you hold.</p>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Tip:</strong> Bonus shares reduce the price proportionally — your total holding value remains the same immediately after the bonus.</div>
+    </div>
+  </section>
 
-    <!-- 16. Trading Holidays -->
-    <div id="calc-holidays" class="calculator-section">
-      <h2>Trading Holidays 2025</h2>
-      <div class="calc-body">
-        <div class="holidays-table">
-          <table>
-            <thead>
-              <tr><th>Date</th><th>Day</th><th>Holiday</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>26 Jan 2025</td><td>Sunday</td><td>Republic Day</td></tr>
-              <tr><td>26 Feb 2025</td><td>Wednesday</td><td>Mahashivratri</td></tr>
-              <tr><td>14 Mar 2025</td><td>Friday</td><td>Holi</td></tr>
-              <tr><td>31 Mar 2025</td><td>Monday</td><td>Id-Ul-Fitr (Ramzan Id)</td></tr>
-              <tr><td>14 Apr 2025</td><td>Monday</td><td>Dr. Baba Saheb Ambedkar Jayanti</td></tr>
-              <tr><td>18 Apr 2025</td><td>Friday</td><td>Good Friday</td></tr>
-              <tr><td>01 May 2025</td><td>Thursday</td><td>Maharashtra Day</td></tr>
-              <tr><td>15 Aug 2025</td><td>Friday</td><td>Independence Day</td></tr>
-              <tr><td>27 Aug 2025</td><td>Wednesday</td><td>Ganesh Chaturthi</td></tr>
-              <tr><td>02 Oct 2025</td><td>Thursday</td><td>Mahatma Gandhi Jayanti</td></tr>
-              <tr><td>02 Oct 2025</td><td>Thursday</td><td>Dussehra</td></tr>
-              <tr><td>20 Oct 2025</td><td>Monday</td><td>Diwali Laxmi Pujan</td></tr>
-              <tr><td>21 Oct 2025</td><td>Tuesday</td><td>Diwali Balipratipada</td></tr>
-              <tr><td>05 Nov 2025</td><td>Wednesday</td><td>Prakash Gurpurb Sri Guru Nanak Dev ji</td></tr>
-              <tr><td>25 Dec 2025</td><td>Thursday</td><td>Christmas</td></tr>
-            </tbody>
-          </table>
+  <!-- 10. Lumpsum -->
+  <section id="calc-lumpsum" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-coins"></i> Lumpsum Calculator</h2><p class="calc-subtitle">One-time investment growth calculator</p></div>
+      <button class="btn-icon" onclick="exportPDF('lumpsum')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Investment Amount (₹)</label><input type="number" id="lsAmt" placeholder="100000"/></div>
+        <div class="input-group"><label>Expected Annual Return (%)</label><input type="number" id="lsRate" placeholder="12"/></div>
+        <div class="input-group"><label>Investment Period (Years)</label><input type="number" id="lsYrs" placeholder="10"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('lumpsum')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcLumpsum()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
+      <div class="result-card" id="res-lumpsum"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>Lumpsum investing means putting all money at once. Best used when markets are low or you have a large amount to invest.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>A = P × (1 + r)^n</code></div>
+    </div>
+  </section>
 
-    <!-- 17. Best Books -->
-    <div id="calc-books" class="calculator-section">
-      <h2>Best Books on Investment, Trading &amp; Stock Market</h2>
-      <div class="calc-body">
-        <div class="books-grid">
-          <div class="book-card">
-            <h4>The Intelligent Investor</h4>
-            <p>by Benjamin Graham</p>
-            <span class="book-tag">Value Investing</span>
-          </div>
-          <div class="book-card">
-            <h4>Rich Dad Poor Dad</h4>
-            <p>by Robert Kiyosaki</p>
-            <span class="book-tag">Personal Finance</span>
-          </div>
-          <div class="book-card">
-            <h4>One Up On Wall Street</h4>
-            <p>by Peter Lynch</p>
-            <span class="book-tag">Stock Picking</span>
-          </div>
-          <div class="book-card">
-            <h4>The Little Book of Common Sense Investing</h4>
-            <p>by John C. Bogle</p>
-            <span class="book-tag">Index Funds</span>
-          </div>
-          <div class="book-card">
-            <h4>Think and Grow Rich</h4>
-            <p>by Napoleon Hill</p>
-            <span class="book-tag">Mindset</span>
-          </div>
-          <div class="book-card">
-            <h4>Security Analysis</h4>
-            <p>by Benjamin Graham &amp; David Dodd</p>
-            <span class="book-tag">Fundamental Analysis</span>
-          </div>
+  <!-- 11. Rule of 72 -->
+  <section id="calc-rule72" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-clock"></i> Rule of 72 Calculator</h2><p class="calc-subtitle">How long to double your money?</p></div>
+      <button class="btn-icon" onclick="exportPDF('rule72')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Annual Interest / Return Rate (%)</label><input type="number" id="r72Rate" placeholder="12"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('rule72')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcRule72()"><i class="fas fa-bolt"></i> Calculate</button>
         </div>
       </div>
+      <div class="result-card" id="res-rule72"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter rate and click Calculate</p></div></div>
     </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>The Rule of 72 is a quick mental math shortcut to estimate how many years it takes to double an investment.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>Years to Double = 72 ÷ Annual Return Rate</code></div>
+      <div class="tip-box"><i class="fas fa-lightbulb"></i> <strong>Example:</strong> At 12% returns, your money doubles in 72÷12 = 6 years!</div>
+    </div>
+  </section>
 
-  </div><!-- end main-content -->
+  <!-- 12. Dividend -->
+  <section id="calc-dividend" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-hand-holding-usd"></i> Dividend Details Calculator</h2><p class="calc-subtitle">Calculate your dividend income and yield</p></div>
+      <button class="btn-icon" onclick="exportPDF('dividend')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Shares Held</label><input type="number" id="divShares" placeholder="100"/></div>
+        <div class="input-group"><label>Dividend Per Share (₹)</label><input type="number" id="divAmt" placeholder="10"/></div>
+        <div class="input-group"><label>Buy Price Per Share (₹)</label><input type="number" id="divBuy" placeholder="200"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('dividend')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcDiv()"><i class="fas fa-bolt"></i> Calculate</button>
+        </div>
+      </div>
+      <div class="result-card" id="res-dividend"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
+    </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>Dividend yield shows what percentage of your investment you earn back as dividend each year.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>Yield = (Dividend Per Share ÷ Buy Price) × 100</code></div>
+    </div>
+  </section>
 
-  <script>
-    // Clock
-    function updateClock() {
-      const now = new Date();
-      let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      h = h % 12 || 12;
-      document.getElementById('clock').textContent =
-        `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
-    }
-    setInterval(updateClock, 1000); updateClock();
+  <!-- 13. Bonus Buyback -->
+  <section id="calc-bonusBuyback" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-search-dollar"></i> Bonus &amp; Buyback Details</h2><p class="calc-subtitle">Calculate your buyback earnings</p></div>
+      <button class="btn-icon" onclick="exportPDF('bonusBuyback')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Shares Held</label><input type="number" id="bbShares" placeholder="1000"/></div>
+        <div class="input-group"><label>Buyback Price (₹)</label><input type="number" id="bbPrice" placeholder="500"/></div>
+        <div class="input-group"><label>Buyback Ratio (e.g. 1 for 1:10)</label><input type="number" id="bbRatio" placeholder="1"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('bonusBuyback')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcBuyback()"><i class="fas fa-bolt"></i> Calculate</button>
+        </div>
+      </div>
+      <div class="result-card" id="res-bonusBuyback"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
+    </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>In a buyback, a company repurchases its shares at a premium price. Calculate how much you'll receive.</p>
+    </div>
+  </section>
 
-    // Theme toggle
-    document.getElementById('themeToggle').addEventListener('change', function() {
-      document.body.classList.toggle('light-mode', !this.checked);
-    });
+  <!-- 14. Face Value -->
+  <section id="calc-faceValue" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-exchange-alt"></i> Face Value Split &amp; Demerger</h2><p class="calc-subtitle">Impact of face value change on your holdings</p></div>
+      <button class="btn-icon" onclick="exportPDF('faceValue')"><i class="fas fa-file-pdf"></i> Export PDF</button>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Current Face Value (₹)</label><input type="number" id="fvCurr" placeholder="10"/></div>
+        <div class="input-group"><label>New Face Value (₹)</label><input type="number" id="fvNew" placeholder="2"/></div>
+        <div class="input-group"><label>Shares Held</label><input type="number" id="fvShares" placeholder="100"/></div>
+        <div class="input-group"><label>Current Market Price (₹)</label><input type="number" id="fvPrice" placeholder="500"/></div>
+        <div class="btn-row">
+          <button class="btn-clear" onclick="clearCalc('faceValue')"><i class="fas fa-trash"></i> Clear</button>
+          <button class="btn-calc" onclick="calcFV()"><i class="fas fa-bolt"></i> Calculate</button>
+        </div>
+      </div>
+      <div class="result-card" id="res-faceValue"><div class="result-placeholder"><i class="fas fa-chart-pie"></i><p>Enter values and click Calculate</p></div></div>
+    </div>
+    <div class="info-card">
+      <h4><i class="fas fa-info-circle"></i> How it works</h4>
+      <p>When face value is reduced, shares increase proportionally and market price adjusts. Total holding value stays same.</p>
+      <div class="formula-box"><span class="formula-label">Formula</span><code>New Shares = Old Shares × (Old FV ÷ New FV)</code></div>
+    </div>
+  </section>
 
-    // Show calculator
-    function showCalculator(id) {
-      document.querySelectorAll('.calculator-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.sidebar-nav li').forEach(l => l.classList.remove('active'));
-      document.getElementById('calc-' + id).classList.add('active');
-      event.currentTarget.classList.add('active');
-    }
+  <!-- 15. Stock Score AI -->
+  <section id="calc-stockScore" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-robot"></i> Stock Score by AI</h2><p class="calc-subtitle">AI-based educational stock analysis</p></div>
+    </div>
+    <div class="calc-grid">
+      <div class="calc-card">
+        <div class="input-group"><label>Stock Symbol / Company Name</label><input type="text" id="aiStock" placeholder="e.g. RELIANCE, TCS, INFY"/></div>
+        <div class="btn-row">
+          <button class="btn-calc" onclick="calcAI()"><i class="fas fa-robot"></i> Analyze Stock</button>
+        </div>
+      </div>
+      <div class="result-card" id="res-stockScore"><div class="result-placeholder"><i class="fas fa-robot"></i><p>Enter stock name to analyze</p></div></div>
+    </div>
+    <div class="info-card"><h4><i class="fas fa-exclamation-triangle"></i> Disclaimer</h4><p>This is for <strong>educational purposes only</strong> and does not constitute financial advice. Always do your own research before investing.</p></div>
+  </section>
 
-    // Clear fields
-    function clearFields(id) {
-      document.querySelectorAll('#calc-' + id + ' input').forEach(i => i.value = '');
-      const r = document.getElementById(id + 'Result') || document.querySelector('#calc-' + id + ' .result-box');
-      if (r) r.textContent = r.textContent.split(':')[0] + ': 0';
-    }
+  <!-- 16. Holidays -->
+  <section id="calc-holidays" class="calc-section">
+    <div class="calc-header"><div><h2><i class="fas fa-calendar-alt"></i> NSE/BSE Trading Holidays 2025</h2><p class="calc-subtitle">Plan your trades around market holidays</p></div></div>
+    <div class="calc-card full-width">
+      <table class="styled-table">
+        <thead><tr><th>#</th><th>Date</th><th>Day</th><th>Holiday</th><th>Exchange</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>26 Jan 2025</td><td>Sunday</td><td>Republic Day</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>2</td><td>26 Feb 2025</td><td>Wednesday</td><td>Mahashivratri</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>3</td><td>14 Mar 2025</td><td>Friday</td><td>Holi</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>4</td><td>31 Mar 2025</td><td>Monday</td><td>Id-Ul-Fitr (Ramzan Id)</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>5</td><td>14 Apr 2025</td><td>Monday</td><td>Dr. Baba Saheb Ambedkar Jayanti</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>6</td><td>18 Apr 2025</td><td>Friday</td><td>Good Friday</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>7</td><td>01 May 2025</td><td>Thursday</td><td>Maharashtra Day</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>8</td><td>15 Aug 2025</td><td>Friday</td><td>Independence Day</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>9</td><td>27 Aug 2025</td><td>Wednesday</td><td>Ganesh Chaturthi</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>10</td><td>02 Oct 2025</td><td>Thursday</td><td>Gandhi Jayanti / Dussehra</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>11</td><td>20 Oct 2025</td><td>Monday</td><td>Diwali - Laxmi Pujan</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>12</td><td>21 Oct 2025</td><td>Tuesday</td><td>Diwali - Balipratipada</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>13</td><td>05 Nov 2025</td><td>Wednesday</td><td>Guru Nanak Jayanti</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+          <tr><td>14</td><td>25 Dec 2025</td><td>Thursday</td><td>Christmas</td><td><span class="tag">NSE</span><span class="tag">BSE</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    // Stock Average
-    function addStockRow() {
-      const c = document.querySelectorAll('#stockAvgRows .row-group').length + 1;
-      const d = document.createElement('div'); d.className = 'row-group';
-      d.innerHTML = `<label>Buy ${c} Price:</label><input type="number" class="buy-price" placeholder="Enter buy price"/>
-                     <label>Quantity:</label><input type="number" class="buy-qty" placeholder="Enter quantity"/>`;
-      document.getElementById('stockAvgRows').appendChild(d);
-    }
-    function calcStockAvg() {
-      const prices = document.querySelectorAll('.buy-price');
-      const qtys = document.querySelectorAll('.buy-qty');
-      let totalInv = 0, totalQty = 0;
-      prices.forEach((p, i) => {
-        const pr = parseFloat(p.value) || 0, q = parseFloat(qtys[i].value) || 0;
-        totalInv += pr * q; totalQty += q;
-      });
-      const avg = totalQty ? (totalInv / totalQty).toFixed(2) : 0;
-      document.getElementById('stockAvgResult').textContent = `Average Price: ₹${avg} | Total Investment: ₹${totalInv.toFixed(2)} | Total Qty: ${totalQty}`;
-    }
+  <!-- 17. Books -->
+  <section id="calc-books" class="calc-section">
+    <div class="calc-header"><div><h2><i class="fas fa-book"></i> Best Books on Stock Market &amp; Investing</h2><p class="calc-subtitle">Handpicked reads to sharpen your investing mind</p></div></div>
+    <div class="books-grid">
+      <div class="book-card"><div class="book-icon">📈</div><h4>The Intelligent Investor</h4><p>Benjamin Graham</p><span class="book-tag">Value Investing</span><p class="book-desc">The bible of value investing. Warren Buffett calls it the best book on investing ever written.</p></div>
+      <div class="book-card"><div class="book-icon">💰</div><h4>Rich Dad Poor Dad</h4><p>Robert Kiyosaki</p><span class="book-tag">Personal Finance</span><p class="book-desc">Learn how the rich think about money differently and build assets instead of liabilities.</p></div>
+      <div class="book-card"><div class="book-icon">🔍</div><h4>One Up On Wall Street</h4><p>Peter Lynch</p><span class="book-tag">Stock Picking</span><p class="book-desc">How to use what you already know to make money in the market.</p></div>
+      <div class="book-card"><div class="book-icon">📊</div><h4>The Little Book of Common Sense Investing</h4><p>John C. Bogle</p><span class="book-tag">Index Funds</span><p class="book-desc">Why low-cost index funds beat most actively managed funds over time.</p></div>
+      <div class="book-card"><div class="book-icon">🧠</div><h4>Think and Grow Rich</h4><p>Napoleon Hill</p><span class="book-tag">Mindset</span><p class="book-desc">The mindset and habits of the most successful people in history.</p></div>
+      <div class="book-card"><div class="book-icon">📉</div><h4>Security Analysis</h4><p>Graham &amp; Dodd</p><span class="book-tag">Fundamental Analysis</span><p class="book-desc">The foundation of fundamental analysis used by professional investors worldwide.</p></div>
+    </div>
+  </section>
 
-    // Profit/Loss
-    function calcProfitLoss() {
-      const b = parseFloat(document.getElementById('plBuyPrice').value) || 0;
-      const s = parseFloat(document.getElementById('plSellPrice').value) || 0;
-      const q = parseFloat(document.getElementById('plQty').value) || 0;
-      const pl = (s - b) * q;
-      const pct = b ? ((s - b) / b * 100).toFixed(2) : 0;
-      document.getElementById('plResult').textContent =
-        `${pl >= 0 ? 'Profit' : 'Loss'}: ₹${Math.abs(pl).toFixed(2)} (${pct}%)`;
-      document.getElementById('plResult').style.color = pl >= 0 ? '#00e676' : '#ff5252';
-    }
+  <!-- 18. History -->
+  <section id="calc-history" class="calc-section">
+    <div class="calc-header">
+      <div><h2><i class="fas fa-history"></i> Calculation History</h2><p class="calc-subtitle">Your recent calculations</p></div>
+      <button class="btn-icon btn-danger" onclick="clearHistory()"><i class="fas fa-trash"></i> Clear All</button>
+    </div>
+    <div id="historyList" class="history-list"><div class="empty-history"><i class="fas fa-inbox"></i><p>No calculations yet. Use any calculator to see history here.</p></div></div>
+  </section>
 
-    // SIP
-    function calcSIP() {
-      const p = parseFloat(document.getElementById('sipAmount').value) || 0;
-      const r = (parseFloat(document.getElementById('sipRate').value) || 0) / 12 / 100;
-      const n = (parseFloat(document.getElementById('sipYears').value) || 0) * 12;
-      const m = r ? p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r) : p * n;
-      document.getElementById('sipResult').textContent =
-        `Maturity Amount: ₹${m.toFixed(2)} | Invested: ₹${(p*n).toFixed(2)} | Returns: ₹${(m - p*n).toFixed(2)}`;
-    }
+</div><!-- end main -->
 
-    // Percentage
-    function calcPercentage() {
-      const v = parseFloat(document.getElementById('percValue').value) || 0;
-      const p = parseFloat(document.getElementById('percPercent').value) || 0;
-      document.getElementById('percResult').textContent = `Result: ${(v * p / 100).toFixed(2)}`;
-    }
-
-    // EMI
-    function calcEMI() {
-      const p = parseFloat(document.getElementById('emiLoan').value) || 0;
-      const r = (parseFloat(document.getElementById('emiRate').value) || 0) / 12 / 100;
-      const n = parseFloat(document.getElementById('emiMonths').value) || 0;
-      const emi = r ? p * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1) : p/n;
-      document.getElementById('emiResult').textContent =
-        `Monthly EMI: ₹${emi.toFixed(2)} | Total Amount: ₹${(emi*n).toFixed(2)} | Interest: ₹${(emi*n - p).toFixed(2)}`;
-    }
-
-    // CAGR
-    function calcCAGR() {
-      const i = parseFloat(document.getElementById('cagrInitial').value) || 0;
-      const f = parseFloat(document.getElementById('cagrFinal').value) || 0;
-      const y = parseFloat(document.getElementById('cagrYears').value) || 0;
-      const cagr = i && y ? ((Math.pow(f/i, 1/y) - 1) * 100).toFixed(2) : 0;
-      document.getElementById('cagrResult').textContent = `CAGR : ${cagr}%`;
-    }
-
-    // SWP
-    function calcSWP() {
-      let corpus = parseFloat(document.getElementById('swpInvestment').value) || 0;
-      const w = parseFloat(document.getElementById('swpWithdrawal').value) || 0;
-      const r = (parseFloat(document.getElementById('swpRate').value) || 0) / 12 / 100;
-      const n = (parseFloat(document.getElementById('swpYears').value) || 0) * 12;
-      for (let m = 0; m < n; m++) { corpus = corpus * (1 + r) - w; if (corpus < 0) { corpus = 0; break; } }
-      document.getElementById('swpResult').textContent = `Final Corpus: ₹${corpus.toFixed(2)}`;
-    }
-
-    // Stock Split
-    function calcStockSplit() {
-      const p = parseFloat(document.getElementById('splitPrice').value) || 0;
-      const s = parseFloat(document.getElementById('splitShares').value) || 0;
-      const r = parseFloat(document.getElementById('splitRatio').value) || 1;
-      document.getElementById('splitResult').textContent =
-        `New Price: ₹${(p/r).toFixed(2)} | New Shares: ${s*r}`;
-    }
-
-    // Bonus Share
-    function calcBonusShare() {
-      const s = parseFloat(document.getElementById('bonusShares').value) || 0;
-      const r = parseFloat(document.getElementById('bonusRatio').value) || 0;
-      const p = parseFloat(document.getElementById('bonusPrice').value) || 0;
-      const bonus = Math.floor(s * r);
-      document.getElementById('bonusResult').textContent =
-        `Bonus Shares: ${bonus} | Total Shares: ${s + bonus} | Total Value: ₹${((s+bonus)*p).toFixed(2)}`;
-    }
-
-    // Lumpsum
-    function calcLumpsum() {
-      const p = parseFloat(document.getElementById('lsAmount').value) || 0;
-      const r = (parseFloat(document.getElementById('lsRate').value) || 0) / 100;
-      const n = parseFloat(document.getElementById('lsYears').value) || 0;
-      const a = p * Math.pow(1+r, n);
-      document.getElementById('lsResult').textContent =
-        `Maturity Amount: ₹${a.toFixed(2)} | Profit: ₹${(a-p).toFixed(2)}`;
-    }
-
-    // Rule of 72
-    function calcRule72() {
-      const r = parseFloat(document.getElementById('rule72Rate').value) || 0;
-      document.getElementById('rule72Result').textContent = `Years to Double: ${r ? (72/r).toFixed(1) : 0} years`;
-    }
-
-    // Dividend
-    function calcDividend() {
-      const s = parseFloat(document.getElementById('divShares').value) || 0;
-      const d = parseFloat(document.getElementById('divAmount').value) || 0;
-      const b = parseFloat(document.getElementById('divBuyPrice').value) || 0;
-      const total = s * d;
-      const yield_ = b ? ((d/b)*100).toFixed(2) : 0;
-      document.getElementById('divResult').textContent = `Total Dividend: ₹${total.toFixed(2)} | Yield: ${yield_}%`;
-    }
-
-    // Buyback
-    function calcBuyback() {
-      const s = parseFloat(document.getElementById('bbShares').value) || 0;
-      const p = parseFloat(document.getElementById('bbPrice').value) || 0;
-      const r = parseFloat(document.getElementById('bbRatio').value) || 0;
-      const eligible = Math.floor(s * r / 10);
-      document.getElementById('bbResult').textContent =
-        `Eligible Shares: ${eligible} | Amount: ₹${(eligible*p).toFixed(2)}`;
-    }
-
-    // Face Value
-    function calcFaceValue() {
-      const cf = parseFloat(document.getElementById('fvCurrent').value) || 1;
-      const nf = parseFloat(document.getElementById('fvNew').value) || 1;
-      const s = parseFloat(document.getElementById('fvShares').value) || 0;
-      const p = parseFloat(document.getElementById('fvPrice').value) || 0;
-      const ratio = cf / nf;
-      document.getElementById('fvResult').textContent =
-        `New Shares: ${s*ratio} | New Price: ₹${(p/ratio).toFixed(2)}`;
-    }
-
-    // Stock Score AI
-    function calcStockScore() {
-      const stock = document.getElementById('aiStock').value.trim().toUpperCase();
-      if (!stock) return;
-      document.getElementById('aiResult').textContent = 'Analyzing ' + stock + '...';
-      setTimeout(() => {
-        const score = Math.floor(Math.random() * 30) + 60;
-        document.getElementById('aiResult').innerHTML =
-          `<strong>${stock}</strong> AI Score: <span style="color:#00e676;font-size:1.4em">${score}/100</span><br/>
-          <small>📊 This is for educational purposes only. Not financial advice.</small>`;
-      }, 1200);
-    }
-  </script>
+<script src="app.js"></script>
 </body>
 </html>
