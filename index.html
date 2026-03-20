@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Average Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        input { margin: 5px; }
+        button { margin-top: 10px; }
+        #result { margin-top: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>Stock Average Calculator</h1>
+    <label for="prices">Enter stock prices (comma separated):</label><br>
+    <input type="text" id="prices" placeholder="e.g. 10.50, 12.75, 9.25">
+    <br>
+    <button onclick="calculateAverage()">Calculate Average</button>
+    <div id="result"></div>
+
+    <script>
+        function calculateAverage() {
+            const prices = document.getElementById('prices').value.split(',').map(price => parseFloat(price.trim()));
+            const total = prices.reduce((sum, price) => sum + price, 0);
+            const average = total / prices.length;
+            document.getElementById('result').innerText = 'Average Price: ' + average.toFixed(2);
+        }
+    </script>
+</body>
+</html>
